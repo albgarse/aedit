@@ -97,19 +97,21 @@ void display(struct textBuffer *buffer) {
 	}
 
 	/* Draw the top line */
-	attron(COLOR_PAIR(_COLOR_INV));
+	//attron(COLOR_PAIR(_COLOR_INV));
+  attron(A_REVERSE);
 	sprintf(topLine," aedit v0.1b   File: %s  Row %d  Col %d ",buffer->bufferName,buffer->texty+1,buffer->curx+1);
 //sprintf(topLine,"leftLength: %d  gapLength: %d Length: %d",buffer->leftLength,buffer->gapLength,buffer->length);
-	for (i=1 ; i<=COLS ; i++)
+
+  for (i=1 ; i<=COLS ; i++)
 		strcat(topLine," ");
 	mvaddnstr(0,0,topLine,COLS);
-	attron(COLOR_PAIR(_COLOR_NORM));
+	//attron(COLOR_PAIR(_COLOR_NORM));
 
 	/* set cursor position */
   	buffer->curx=xtmp;
   	buffer->cury=ytmp;
 	move(buffer->cury,buffer->curx);
-
+  attroff(A_REVERSE);
 }
 
 
@@ -126,11 +128,11 @@ void initScreen() {
 
 
 	if (has_colors()) {
-		start_color();
+		//start_color();
 
 
-		init_pair(_COLOR_NORM, COLOR_GREEN, COLOR_BLUE);
-		init_pair(_COLOR_INV, COLOR_BLUE, COLOR_GREEN);
+		//init_pair(_COLOR_NORM, COLOR_GREEN, COLOR_BLACK);
+		//init_pair(_COLOR_INV, COLOR_BLUE, COLOR_GREEN);
 
 /*
 		init_pair(COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
@@ -142,9 +144,9 @@ void initScreen() {
 		init_pair(COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
 		init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
 */
-		assume_default_colors(COLOR_GREEN,COLOR_BLUE);
+		//assume_default_colors(COLOR_GREEN,COLOR_BLUE);
 
-		attron(COLOR_PAIR(_COLOR_NORM));
+		//attron(COLOR_PAIR(_COLOR_NORM));
 	}
 }
 
