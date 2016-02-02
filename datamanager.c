@@ -80,7 +80,7 @@ void moveGap(struct textBuffer *buffer, int position) {
 */
 
  long amount;
- char *destination,*source;
+ unsigned char *destination,*source;
 // int i;
 
 	if (position != buffer->leftLength) {

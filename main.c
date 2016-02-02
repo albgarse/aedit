@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <curses.h>
 #include "datatypes.h"
+#include "datamanager.h"
+#include "iomanager.h"
+#include "screenmanager.h"
+
 
 void mainloop(struct textBuffer *);
 
