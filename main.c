@@ -82,8 +82,8 @@ void mainloop(struct textBuffer *b) {
     case 10:
     case 13:
       insert(b,'\n');
-      b->curx=0;
-      b->cury++;
+      //b->curx=0;
+      //b->cury++;
       break;
 
     case 27:
