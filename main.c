@@ -103,6 +103,10 @@ void mainloop(struct textBuffer *b) {
       delCurrentChar(b);
       break;
 
+    case 23: /* ^W */
+      save(b, b->bufferName);
+      break;
+
     default:
       insert(b,(char)ch);
       break;

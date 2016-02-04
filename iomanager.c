@@ -9,7 +9,8 @@
 #include "datamanager.h"
 
 
-int load(struct textBuffer *buffer, char *file) {
+int load(struct textBuffer *buffer, char *file)
+{
 
  int fd, filesize,size;
  struct stat fstate;
@@ -36,8 +37,25 @@ int load(struct textBuffer *buffer, char *file) {
 		buffer->leftLength=filesize;
 		buffer->gapLength=size-filesize;
 		return _OK;
+
+    close(fd);
+
 	} else {
 		return _KO;
 	}
+}
 
+int save(struct textBuffer *buffer,char *file)
+{
+  int fd,writtenbytes;
+
+  if ((fd = open(file,O_WRONLY)) < 0) {
+    return _KO;
+  }
+  /* save file */
+  if (write(fd, buffer->data, buffer->length) < 0) {
+    return _KO;
+  }
+
+  close(fd);
 }

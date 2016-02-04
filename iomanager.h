@@ -17,4 +17,4 @@ int load(struct textBuffer *buffer,char *file);
 The save function save a text buffer to a file.
 the file parametes is the string containing the full filename (including path).
 ****/
-//int save(struct textBuffer *buffer,char *file);
+int save(struct textBuffer *buffer,char *file);
