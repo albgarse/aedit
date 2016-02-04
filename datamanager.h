@@ -1,4 +1,4 @@
-/****
+/**** 
  datamanager.h
  (c)Alberto Garcia Serrano
  This software is under GPL license.

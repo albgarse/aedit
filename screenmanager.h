@@ -1,4 +1,4 @@
-/****
+/**** 
  screenmanager.h
  (c)2003 Alberto Garcia Serrano.
 

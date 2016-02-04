@@ -1,4 +1,4 @@
-# Makefile for aedit
+# Makefile for aedit 
 
 LDFLAGS := -lcurses
 CFLAGS := -g -oaedit
