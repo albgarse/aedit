@@ -99,17 +99,19 @@ void display(struct textBuffer *buffer) {
 	/* Draw the top line */
 	//attron(COLOR_PAIR(_COLOR_INV));
   attron(A_REVERSE);
+  move(0, 0);         // move to begining of line
+  for (i=0; i<COLS; i++)
+    addch(' ');
+
 	sprintf(topLine," aedit v0.1b   File: %s  Row %d  Col %d ",buffer->bufferName,buffer->texty+1,buffer->curx+1);
 //sprintf(topLine,"leftLength: %d  gapLength: %d Length: %d",buffer->leftLength,buffer->gapLength,buffer->length);
 
-  for (i=1 ; i<=COLS ; i++)
-		strcat(topLine," ");
 	mvaddnstr(0,0,topLine,COLS);
 	//attron(COLOR_PAIR(_COLOR_NORM));
 
 	/* set cursor position */
-  	buffer->curx=xtmp;
-  	buffer->cury=ytmp;
+  buffer->curx=xtmp;
+  buffer->cury=ytmp;
 	move(buffer->cury,buffer->curx);
   attroff(A_REVERSE);
 }
@@ -119,10 +121,10 @@ void display(struct textBuffer *buffer) {
 
 void initScreen() {
 
-        initscr();
+  initscr();
 
-        noecho();
-        cbreak();
+  noecho();
+  cbreak();
 	keypad(stdscr,TRUE);
 	nonl();
 
@@ -151,6 +153,22 @@ void initScreen() {
 }
 
 
-void closeScreen() {
+void closeScreen()
+{
 	endwin();
+}
+
+void readCommand(char * prompt, char *cmd)
+{
+  int i;
+
+  attron(A_REVERSE);
+  echo();
+  move(LINES-1, 0);         // move to begining of line
+  for (i=0; i<COLS; i++)
+    addch(' ');
+  mvaddnstr(LINES-1,0,prompt,COLS);
+  getstr(cmd);
+  noecho();
+  attroff(A_REVERSE);
 }

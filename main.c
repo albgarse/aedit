@@ -14,18 +14,22 @@ int main(int argc, char **argv) {
 
   struct textBuffer *b;
 
+  b=(struct textBuffer *)malloc(sizeof(struct textBuffer));
+
  	if (argc<=1) {
-		printf("use aedit [filename]\n");
-		exit(1);
-	}
+    b->bufferName[0] = '\0';
+    if (createBuffer(b, _INIT_SIZE) != _OK) {
+      printf("Error creating initial buffer.\n");
+      return _KO;
+    }
+		moveGap(b,-1);
+	} else {
+    strncpy(b->bufferName,argv[1],_STR_SIZE);
+    load(b,argv[1]);
+    moveGap(b,-1);
+  }
 
 	initScreen();
-
-	b=(struct textBuffer *)malloc(sizeof(struct textBuffer));
-
-	strncpy(b->bufferName,argv[1],255);
-  load(b,argv[1]);
-  moveGap(b,-1);
   display(b);
 
   mainloop(b);
@@ -37,7 +41,9 @@ int main(int argc, char **argv) {
 }
 
 void mainloop(struct textBuffer *b) {
-  int quit,ch,i;
+  int quit,i;
+  int ch;
+  char cmd[_STR_SIZE];
 
   quit=0;
 
@@ -91,7 +97,11 @@ void mainloop(struct textBuffer *b) {
       break;
 
     case 27:
-      quit=1;
+      //quit=1;
+      readCommand("cmd> ", cmd);
+      if (!strcmp(cmd, "quit")) {
+        quit = 1;
+      }
       break;
 
     case KEY_BACKSPACE:

@@ -1,4 +1,4 @@
-/**** 
+/****
  datatypes.h
  (c)Alberto Garcia Serrano
  This software is under GPL license.
@@ -15,6 +15,7 @@
 #define _COLOR_NORM 1
 #define _COLOR_INV 2
 #define _INIT_SIZE 1024
+#define _STR_SIZE 255
 
 
 
@@ -35,7 +36,7 @@ struct textBuffer {
 	int gapLength;		/* length of the gap 				*/
 	int growSize;		/* step size when the buffer grows 		*/
 	unsigned char *scrtop;	/* pointer to the text at the top of the screen */
-	char bufferName[255];	/* name of the buffer 				*/
+	char bufferName[_STR_SIZE];	/* name of the buffer 				*/
 	short int curx,cury;	/* actual cursor position on screen 		*/
 	int texty;		/* actual cursor position on text 		*/
 };

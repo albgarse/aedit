@@ -5,7 +5,6 @@
  Disk IO management routines
 ****/
 
-
 /****
 The load function loads a file from disk into the text buffer.
 the file parametes is the string containing the full filename (including path).

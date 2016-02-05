@@ -1,4 +1,4 @@
-/**** 
+/****
  screenmanager.h
  (c)2003 Alberto Garcia Serrano.
 
@@ -12,7 +12,6 @@ the file parametes is the string containing the full filename (including path).
 ****/
 void display(struct textBuffer *buffer);
 
-
 void initScreen();
-
 void closeScreen();
+void readCommand(char *, char *);
