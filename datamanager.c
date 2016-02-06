@@ -16,6 +16,7 @@ int createBuffer(struct textBuffer *buffer, int size) {
 	buffer->curx=0;
 	buffer->cury=0;
 	buffer->texty=0;
+  buffer->modified = 0;
 
 	ok = newSize(buffer,size);	/* Allocate the needed space*/
 	buffer->scrtop=buffer->data;
@@ -216,12 +217,14 @@ void insert(struct textBuffer *buffer, unsigned char ch) {
 	buffer->gapLength--;
 	buffer->length++;
 	*(buffer->data+buffer->leftLength)=ch;
+  buffer->modified = 1;
 }
 
 void delCurrentChar(struct textBuffer *buffer) {
 	buffer->leftLength--;
-        buffer->gapLength++;
-        buffer->length--;
+  buffer->gapLength++;
+  buffer->length--;
+  buffer->modified = 1;
 }
 
 void cursorLeft(struct textBuffer *buffer) {

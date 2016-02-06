@@ -1,2 +1,2 @@
 # aedit
-ncurses based text editor
+Another text editor

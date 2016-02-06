@@ -6,6 +6,7 @@
 #include "datamanager.h"
 #include "iomanager.h"
 #include "screenmanager.h"
+#include "commandmanager.h"
 
 
 void mainloop(struct textBuffer *);
@@ -92,16 +93,11 @@ void mainloop(struct textBuffer *b) {
     case 10:
     case 13:
       insert(b,'\n');
-      //b->curx=0;
-      //b->cury++;
       break;
 
     case 27:
-      //quit=1;
       readCommand("cmd> ", cmd);
-      if (!strcmp(cmd, "quit")) {
-        quit = 1;
-      }
+      quit = processCommand(cmd, b);
       break;
 
     case KEY_BACKSPACE:

@@ -16,6 +16,7 @@
 #define _COLOR_INV 2
 #define _INIT_SIZE 1024
 #define _STR_SIZE 255
+#define _MAX_TOKENS 4
 
 
 
@@ -37,6 +38,8 @@ struct textBuffer {
 	int growSize;		/* step size when the buffer grows 		*/
 	unsigned char *scrtop;	/* pointer to the text at the top of the screen */
 	char bufferName[_STR_SIZE];	/* name of the buffer 				*/
-	short int curx,cury;	/* actual cursor position on screen 		*/
+	short int curx,cury;	/* actual cursor position on screen TODO: delete		*/
 	int texty;		/* actual cursor position on text 		*/
+	int modified; /* the has been modified since last save */
+	char lastError[_STR_SIZE]; /* last error */
 };

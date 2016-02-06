@@ -57,5 +57,7 @@ int save(struct textBuffer *buffer,char *file)
     return _KO;
   }
 
+  buffer->modified = 0;
+
   close(fd);
 }

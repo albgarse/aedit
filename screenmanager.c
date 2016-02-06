@@ -103,7 +103,7 @@ void display(struct textBuffer *buffer) {
   for (i=0; i<COLS; i++)
     addch(' ');
 
-	sprintf(topLine," aedit v0.1b   File: %s  Row %d  Col %d ",buffer->bufferName,buffer->texty+1,buffer->curx+1);
+	sprintf(topLine," aedit v0.1b   File: %s %c  Row %d  Col %d [%s]",buffer->bufferName, buffer->modified?'*':' ', buffer->texty+1,buffer->curx+1, buffer->lastError);
 //sprintf(topLine,"leftLength: %d  gapLength: %d Length: %d",buffer->leftLength,buffer->gapLength,buffer->length);
 
 	mvaddnstr(0,0,topLine,COLS);
