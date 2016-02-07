@@ -53,11 +53,11 @@ int save(struct textBuffer *buffer,char *file)
     return _KO;
   }
   /* save left portion of gap buffer file */
-  if (write(fd, buffer->data, buffer->leftLength) < 0) {
+  if (write(fd, buffer->data, buffer->leftLength+1) < 0) {
     return _KO;
   }
   /* save right portion of gap buffer file */
-  if (write(fd, buffer->data + buffer->leftLength + buffer->gapLength, buffer->length - buffer->leftLength) < 0) {
+  if (write(fd, buffer->data + buffer->leftLength + buffer->gapLength+1, buffer->length - buffer->leftLength) < 0) {
     return _KO;
   }
 
