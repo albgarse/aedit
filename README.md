@@ -1,2 +1,2 @@
 # aedit
-Another text editor
+Another console based text editor

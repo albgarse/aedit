@@ -101,6 +101,8 @@ void mainloop(struct textBuffer *b) {
       break;
 
     case KEY_BACKSPACE:
+    case 8:
+    case 127:
       delCurrentChar(b);
       break;
 

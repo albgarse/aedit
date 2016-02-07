@@ -52,12 +52,16 @@ int save(struct textBuffer *buffer,char *file)
   if ((fd = open(file,O_WRONLY)) < 0) {
     return _KO;
   }
-  /* save file */
-  if (write(fd, buffer->data, buffer->length) < 0) {
+  /* save left portion of gap buffer file */
+  if (write(fd, buffer->data, buffer->leftLength) < 0) {
+    return _KO;
+  }
+  /* save right portion of gap buffer file */
+  if (write(fd, buffer->data + buffer->leftLength + buffer->gapLength, buffer->length - buffer->leftLength) < 0) {
     return _KO;
   }
 
   buffer->modified = 0;
-
   close(fd);
+  return _OK;
 }

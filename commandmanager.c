@@ -1,5 +1,8 @@
 #include <string.h>
 #include "datatypes.h"
+#include "commandmanager.h"
+#include "iomanager.h"
+
 
 int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
 {
