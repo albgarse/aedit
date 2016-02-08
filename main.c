@@ -95,7 +95,7 @@ void mainloop(struct textBuffer *b) {
       insert(b,'\n');
       break;
 
-    case 27:
+    case KEY_ESC:
       readCommand("cmd> ", cmd);
       quit = processCommand(cmd, b);
       break;
@@ -106,13 +106,9 @@ void mainloop(struct textBuffer *b) {
       delCurrentChar(b);
       break;
 
-    case 330:
+    case KEY_SUPR:
       moveGap(b,b->leftLength+1);
       delCurrentChar(b);
-      break;
-
-    case 23: /* ^W */
-      save(b, b->bufferName);
       break;
 
     default:
