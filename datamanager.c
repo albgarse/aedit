@@ -176,7 +176,7 @@ void moveCursorDown(struct textBuffer *buffer) {
  	p=q=buffer->data+buffer->leftLength+buffer->gapLength+1;
 
 	/* Find next carrige return or the end of the buffer */
-	while (*p++ != '\n' && p < buffer->data+buffer->length+buffer->gapLength); 
+	while (*p++ != '\n' && p < buffer->data+buffer->length+buffer->gapLength);
 
 	/* Check for the end of the file */
 	if (p < buffer->data+buffer->length+buffer->gapLength) {

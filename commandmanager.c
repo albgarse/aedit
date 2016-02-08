@@ -25,6 +25,22 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
         strncpy(b->lastError, "Error Saving File", _STR_SIZE);
       }
     }
+
+    /* mark to select text */
+    if (tokens[0][0]=='m') {
+      if (b->mark_init == b->mark_end) {
+        /* first mark */
+        b->mark_init = b->data+b->leftLength+1;
+      } else {
+        /* there is a mark yet. Update */
+        b->mark_end = b->data+b->leftLength+1;
+      }
+    }
+
+    /* deselected text */
+    if (tokens[0][0]=='d') {
+      b->mark_init = b->mark_end = 0;
+    }
   }
   return 0;
 }

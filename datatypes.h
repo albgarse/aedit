@@ -17,6 +17,8 @@
 #define _INIT_SIZE 1024
 #define _STR_SIZE 255
 #define _MAX_TOKENS 4
+#define TRUE 1
+#define FALSE 0
 
 /* KEYS */
 #define KEY_SUP 337

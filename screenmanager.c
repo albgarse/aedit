@@ -13,7 +13,7 @@ void display(struct textBuffer *buffer) {
  int xtmp,ytmp;
  int charWrote,newline;
  char topLine[COLS+50];
-
+ 
  /* x and y are the position in screen to write the next char */
 	x=0;
 	y=1;
@@ -69,6 +69,15 @@ void display(struct textBuffer *buffer) {
 			}
 
 
+      if (buffer->mark_init < buffer->mark_end && buffer->mark_end !=0 && p >= buffer->mark_init && p <= buffer->mark_end) {
+        attron(A_REVERSE);
+      } else if (buffer->mark_init > buffer->mark_end && buffer->mark_end !=0 && p >= buffer->mark_end && p <= buffer->mark_init) {
+        attron(A_REVERSE);
+      } else {
+        attroff(A_REVERSE);
+      }
+
+
 			/* write em! */
 			mvaddch(y,x,(unsigned char)*p);
 
@@ -78,20 +87,20 @@ void display(struct textBuffer *buffer) {
 			break;
 		}
 
-		/* check if this is the cursor position */
-		if (newline != TRUE) {
-			if ((p-buffer->data) ==  buffer->leftLength+buffer->gapLength+1) {
-			//	buffer->curx=charWrote==TRUE?x-1:x;
-			//	buffer->cury=y;
-			}
-		} else {
-			/* newline char matched! */
-			/* set the cursor after the last char of the line */
-			if ((p-buffer->data) ==  buffer->leftLength+buffer->gapLength+1) {
-			//	buffer->curx=xtmp;
-			//	buffer->cury=ytmp;
-			}
-		}
+		// /* check if this is the cursor position */
+		// if (newline != TRUE) {
+		// 	if ((p-buffer->data) ==  buffer->leftLength+buffer->gapLength+1) {
+		// 		buffer->curx=charWrote==TRUE?x-1:x;
+		// 		buffer->cury=y;
+		// 	}
+		// } else {
+		// 	/* newline char matched! */
+		// 	/* set the cursor after the last char of the line */
+		// 	if ((p-buffer->data) ==  buffer->leftLength+buffer->gapLength+1) {
+		// 		buffer->curx=xtmp;
+		// 		buffer->cury=ytmp;
+		// 	}
+		// }
 
 		p++;
 	}
