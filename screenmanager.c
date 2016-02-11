@@ -8,12 +8,12 @@
 
 void display(struct textBuffer *buffer) {
 
- unsigned char *p;
+ unsigned char *p, *mark1, *mark2;
  int y,x,i,j;
  int xtmp,ytmp;
  int charWrote,newline;
  char topLine[COLS+50];
- 
+
  /* x and y are the position in screen to write the next char */
 	x=0;
 	y=1;
@@ -68,10 +68,25 @@ void display(struct textBuffer *buffer) {
 				}
 			}
 
+      if (buffer->mark_init != buffer->mark_end && buffer->mark_end !=0) {
+        // calculate pointers to marks
+        if (buffer->leftLength >= buffer->mark_init) {
+          mark1 = buffer->data + buffer->mark_init;
+        } else {
+          mark1 = buffer->data + buffer->gapLength + buffer->mark_init;
+        }
 
-      if (buffer->mark_init < buffer->mark_end && buffer->mark_end !=0 && p >= buffer->mark_init && p <= buffer->mark_end) {
+        if (buffer->leftLength >= buffer->mark_end) {
+          mark2 = buffer->data + buffer->mark_end-1;
+        } else {
+          mark2 = buffer->data + buffer->gapLength + buffer->mark_end-1;
+        }
+      }
+
+
+      if (buffer->mark_init < buffer->mark_end && buffer->mark_end !=0 && p >= mark1 && p <= mark2) {
         attron(A_REVERSE);
-      } else if (buffer->mark_init > buffer->mark_end && buffer->mark_end !=0 && p >= buffer->mark_end && p <= buffer->mark_init) {
+      } else if (buffer->mark_init > buffer->mark_end && buffer->mark_end !=0 && p >= mark2 && p <= mark1) {
         attron(A_REVERSE);
       } else {
         attroff(A_REVERSE);
@@ -86,21 +101,6 @@ void display(struct textBuffer *buffer) {
 
 			break;
 		}
-
-		// /* check if this is the cursor position */
-		// if (newline != TRUE) {
-		// 	if ((p-buffer->data) ==  buffer->leftLength+buffer->gapLength+1) {
-		// 		buffer->curx=charWrote==TRUE?x-1:x;
-		// 		buffer->cury=y;
-		// 	}
-		// } else {
-		// 	/* newline char matched! */
-		// 	/* set the cursor after the last char of the line */
-		// 	if ((p-buffer->data) ==  buffer->leftLength+buffer->gapLength+1) {
-		// 		buffer->curx=xtmp;
-		// 		buffer->cury=ytmp;
-		// 	}
-		// }
 
 		p++;
 	}

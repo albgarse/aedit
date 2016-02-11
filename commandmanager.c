@@ -30,10 +30,10 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
     if (tokens[0][0]=='m') {
       if (b->mark_init == b->mark_end) {
         /* first mark */
-        b->mark_init = b->data+b->leftLength+1;
+        b->mark_init = b->leftLength+1;
       } else {
         /* there is a mark yet. Update */
-        b->mark_end = b->data+b->leftLength+1;
+        b->mark_end = b->leftLength+1;
       }
     }
 

@@ -46,7 +46,7 @@ struct textBuffer {
 	unsigned char *scrtop;	/* pointer to the text at the top of the screen */
 	char bufferName[_STR_SIZE];	/* name of the buffer 				*/
 	short int curx,cury;	/* actual cursor position on screen TODO: delete		*/
-	unsigned char *mark_init, *mark_end; /* pointers to marked text */
+	int mark_init, mark_end; /* pointers to marked text */
 	int texty;		/* actual cursor position on text 		*/
 	int modified; /* the has been modified since last save */
 	char lastError[_STR_SIZE]; /* last error */
