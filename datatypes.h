@@ -50,5 +50,6 @@ struct textBuffer {
 	int texty;		/* actual cursor position on text 		*/
 	int modified; /* the has been modified since last save */
 	char lastError[_STR_SIZE]; /* last error */
-	unsigned char *copybuffer; /* buffer for copy&paste operations */ 
+	unsigned char *copybuffer; /* buffer for copy&paste operations */
+	int copybufferLength; /* length of the data in the copybuffer */
 };

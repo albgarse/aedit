@@ -17,7 +17,7 @@ int createBuffer(struct textBuffer *buffer, int size) {
 	buffer->cury=0;
 	buffer->texty=0;
   buffer->modified = 0;
-  buffer->copybuffer = 0;
+  buffer->copybufferLength = 0;
 
 	ok = newSize(buffer,size);	/* Allocate the needed space*/
 	buffer->scrtop=buffer->data;
@@ -256,39 +256,60 @@ void cursorRight(struct textBuffer *buffer)
 
 void copy(struct textBuffer *buffer)
 {
-  unsigned char *mark1, mark2;
-  int size;
+  unsigned char *mark1, *mark2;
+  int size, i;
 
   /* calculate buffer lenght */
   size = buffer->mark_init<buffer->mark_end?buffer->mark_end-buffer->mark_init:buffer->mark_init-buffer->mark_end;
-  /* get memory for copy buffer */
-  if (buffer->copybuffer != 0) {
-    /* free old buffer */
-    free(buffer->copybuffer);
-  }
-  buffer->copybuffer = (unsigned char *)malloc(size);
 
-  //TODO: extract to a indepedant function
-  if (buffer->mark_init != buffer->mark_end && buffer->mark_end !=0) {
-    // calculate pointers to marks
-    if (buffer->leftLength >= buffer->mark_init) {
-      mark1 = buffer->data + buffer->mark_init;
-    } else {
-      mark1 = buffer->data + buffer->gapLength + buffer->mark_init;
+  if (size > 0) {
+    /* get memory for copy buffer */
+    if (buffer->copybufferLength > 0) {
+      /* free old buffer */
+      free(buffer->copybuffer);
+      buffer->copybufferLength = 0;
+    }
+    buffer->copybuffer = (unsigned char *)malloc(size);
+    buffer->copybufferLength = size;
+
+    //TODO: extract to a indepedant function
+    if (buffer->mark_init != buffer->mark_end && buffer->mark_end !=0) {
+      // calculate pointers to marks
+      if (buffer->leftLength >= buffer->mark_init) {
+        mark1 = buffer->data + buffer->mark_init;
+      } else {
+        mark1 = buffer->data + buffer->gapLength + buffer->mark_init;
+      }
+
+      if (buffer->leftLength >= buffer->mark_end) {
+        mark2 = buffer->data + buffer->mark_end-1;
+      } else {
+        mark2 = buffer->data + buffer->gapLength + buffer->mark_end-1;
+      }
     }
 
-    if (buffer->leftLength >= buffer->mark_end) {
-      mark2 = buffer->data + buffer->mark_end-1;
-    } else {
-      mark2 = buffer->data + buffer->gapLength + buffer->mark_end-1;
+    /* copy data (except the gap) */
+    i=0;
+    while (mark1<=mark2) {
+      if (!inGap(buffer, mark1)) {
+        mark1 = buffer->data+buffer->leftLength+buffer->gapLength+1;
+      }
+      *(buffer->copybuffer+i++) = *mark1++;
     }
   }
+}
 
-  /* copy data (except the gap) */
-  while (mark1<=mark2) {
-    if (!inGap(buffer, mark1)) {
-      mark1 = buffer->data+buffer->leftLength+buffer->gapLength+1;
-    }
-    buffer->copybuffer++ = mark1++;
+void paste(struct textBuffer *buffer)
+{
+  unsigned char *ch;
+  int i;
+
+  for (i=0; i<buffer->copybufferLength; i++) {
+    buffer->leftLength++;
+  	buffer->gapLength--;
+  	buffer->length++;
+  	*(buffer->data+buffer->leftLength)=*(buffer->copybuffer + i);
   }
+  buffer->modified = 1;
+  buffer->lastError[0] ='\0';
 }

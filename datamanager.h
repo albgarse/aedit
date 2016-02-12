@@ -71,3 +71,9 @@ void delCurrentChar(struct textBuffer *buffer);
 void cursorLeft(struct textBuffer *buffer);
 
 void cursorRight(struct textBuffer *buffer);
+
+void copy(struct textBuffer *buffer);
+
+void paste(struct textBuffer *buffer);
+
+void delete(struct textBuffer *buffer);

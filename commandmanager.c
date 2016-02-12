@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 #include "datatypes.h"
 #include "commandmanager.h"
 #include "iomanager.h"
@@ -15,11 +16,11 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
   if (ntokens > 0) {
     /* quit command */
     if (tokens[0][0]=='q') {
-      if (buffer->copybuffer != 0) {
+      if (b->copybufferLength != 0) {
         /* free copy buffer */
-        free(buffer->copybuffer);
+        free(b->copybuffer);
       }
-      free(buffer->data);
+      free(b->data);
 
       return 1;
     }
@@ -44,12 +45,26 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
     }
 
     /* deselected text */
-    if (tokens[0][0]=='d') {
+    if (tokens[0][0]=='M') {
       b->mark_init = b->mark_end = 0;
     }
+
+    /* copy text */
+    if (tokens[0][0]=='c') {
+      copy(b);
+    }
+
+    /* past text */
+    if (tokens[0][0]=='p') {
+      paste(b);
+    }
+
+    
   }
   return 0;
 }
+
+
 
 int tokenize(char cmd[_STR_SIZE], char tokens[_MAX_TOKENS][_STR_SIZE])
 {
