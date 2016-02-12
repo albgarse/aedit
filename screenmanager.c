@@ -6,9 +6,11 @@
 #include "screenmanager.h"
 
 
-void display(struct textBuffer *buffer) {
+void display(struct textBuffer *buffer)
+{
 
- unsigned char *p, *mark1, *mark2;
+ unsigned char *mark1, *mark2;
+ unsigned char *p;
  int y,x,i,j;
  int xtmp,ytmp;
  int charWrote,newline;
@@ -68,6 +70,7 @@ void display(struct textBuffer *buffer) {
 				}
 			}
 
+      //TODO: extract to a indepedant function
       if (buffer->mark_init != buffer->mark_end && buffer->mark_end !=0) {
         // calculate pointers to marks
         if (buffer->leftLength >= buffer->mark_init) {
@@ -82,7 +85,6 @@ void display(struct textBuffer *buffer) {
           mark2 = buffer->data + buffer->gapLength + buffer->mark_end-1;
         }
       }
-
 
       if (buffer->mark_init < buffer->mark_end && buffer->mark_end !=0 && p >= mark1 && p <= mark2) {
         attron(A_REVERSE);
@@ -113,6 +115,7 @@ void display(struct textBuffer *buffer) {
     addch(' ');
 
 	sprintf(topLine," aedit v0.1b   File: %s %c  Row %d  Col %d [%s]",buffer->bufferName, buffer->modified?'*':' ', buffer->texty+1,buffer->curx+1, buffer->lastError);
+  sprintf(topLine," mark1: %d Mark2: %d init: %d end: %d",(int)mark1, (int)mark2, (int)buffer->mark_init, (int)buffer->mark_end);
 //sprintf(topLine,"leftLength: %d  gapLength: %d Length: %d",buffer->leftLength,buffer->gapLength,buffer->length);
 
 	mvaddnstr(0,0,topLine,COLS);
@@ -128,7 +131,8 @@ void display(struct textBuffer *buffer) {
 
 
 
-void initScreen() {
+void initScreen()
+{
 
   initscr();
 

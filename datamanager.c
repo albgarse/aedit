@@ -17,6 +17,7 @@ int createBuffer(struct textBuffer *buffer, int size) {
 	buffer->cury=0;
 	buffer->texty=0;
   buffer->modified = 0;
+  buffer->copybuffer = 0;
 
 	ok = newSize(buffer,size);	/* Allocate the needed space*/
 	buffer->scrtop=buffer->data;
@@ -31,7 +32,8 @@ void freeBuffer(struct textBuffer *b) {
 }
 
 
-int newSize(struct textBuffer *buffer, int size) {
+int newSize(struct textBuffer *buffer, int size)
+{
 
  unsigned char *tmp;
 
@@ -57,7 +59,8 @@ int newSize(struct textBuffer *buffer, int size) {
 }
 
 
-void moveGap(struct textBuffer *buffer, int position) {
+void moveGap(struct textBuffer *buffer, int position)
+{
 /*
  int amount,i;
  int j;
@@ -109,7 +112,8 @@ void moveGap(struct textBuffer *buffer, int position) {
 
 
 
-void movePreviousLine(struct textBuffer *buffer) {
+void movePreviousLine(struct textBuffer *buffer)
+{
 
 	if (buffer->scrtop > buffer->data)
 		while ((*(--buffer->scrtop-1) != '\n') && (buffer->scrtop > buffer->data)) {
@@ -120,7 +124,8 @@ void movePreviousLine(struct textBuffer *buffer) {
 
 
 
-void moveNextLine(struct textBuffer *buffer) {
+void moveNextLine(struct textBuffer *buffer)
+{
 
 	if (buffer->scrtop <= buffer->data+buffer->length+buffer->gapLength)
 		while ((*(++buffer->scrtop-1) != '\n')) {
@@ -131,7 +136,8 @@ void moveNextLine(struct textBuffer *buffer) {
 
 
 
-void moveCursorUp(struct textBuffer *buffer) {
+void moveCursorUp(struct textBuffer *buffer)
+{
 
  unsigned char *p,*q;
  int x;
@@ -168,7 +174,8 @@ void moveCursorUp(struct textBuffer *buffer) {
 
 
 
-void moveCursorDown(struct textBuffer *buffer) {
+void moveCursorDown(struct textBuffer *buffer)
+{
 
  unsigned char *p,*q;
  int x;
@@ -200,8 +207,8 @@ void moveCursorDown(struct textBuffer *buffer) {
 
 
 
-int inGap(struct textBuffer *buffer, unsigned char *p) {
-
+int inGap(struct textBuffer *buffer, unsigned char *p)
+{
 	/* mind the gap! */
 	if ((p > buffer->data+buffer->leftLength) && (p < buffer->data+buffer->leftLength+buffer->gapLength)) {
         	return 0;
@@ -211,8 +218,8 @@ int inGap(struct textBuffer *buffer, unsigned char *p) {
 }
 
 
-void insert(struct textBuffer *buffer, unsigned char ch) {
-
+void insert(struct textBuffer *buffer, unsigned char ch)
+{
 	buffer->leftLength++;
 	buffer->gapLength--;
 	buffer->length++;
@@ -221,14 +228,16 @@ void insert(struct textBuffer *buffer, unsigned char ch) {
   buffer->lastError[0] ='\0';
 }
 
-void delCurrentChar(struct textBuffer *buffer) {
+void delCurrentChar(struct textBuffer *buffer)
+{
 	buffer->leftLength--;
   buffer->gapLength++;
   buffer->length--;
   buffer->modified = 1;
 }
 
-void cursorLeft(struct textBuffer *buffer) {
+void cursorLeft(struct textBuffer *buffer)
+{
 	if (buffer->leftLength > -1) {
 		moveGap(buffer,buffer->leftLength-1);
 //		if (*(buffer->data+buffer->leftLength+1) == '\n')
@@ -236,10 +245,50 @@ void cursorLeft(struct textBuffer *buffer) {
 	}
 }
 
-void cursorRight(struct textBuffer *buffer) {
+void cursorRight(struct textBuffer *buffer)
+{
 	if (buffer->leftLength < buffer->length-1) {
 		moveGap(buffer,buffer->leftLength+1);
 //		if (*(buffer->data+buffer->leftLength) == '\n')
 //			buffer->texty++;
 	}
+}
+
+void copy(struct textBuffer *buffer)
+{
+  unsigned char *mark1, mark2;
+  int size;
+
+  /* calculate buffer lenght */
+  size = buffer->mark_init<buffer->mark_end?buffer->mark_end-buffer->mark_init:buffer->mark_init-buffer->mark_end;
+  /* get memory for copy buffer */
+  if (buffer->copybuffer != 0) {
+    /* free old buffer */
+    free(buffer->copybuffer);
+  }
+  buffer->copybuffer = (unsigned char *)malloc(size);
+
+  //TODO: extract to a indepedant function
+  if (buffer->mark_init != buffer->mark_end && buffer->mark_end !=0) {
+    // calculate pointers to marks
+    if (buffer->leftLength >= buffer->mark_init) {
+      mark1 = buffer->data + buffer->mark_init;
+    } else {
+      mark1 = buffer->data + buffer->gapLength + buffer->mark_init;
+    }
+
+    if (buffer->leftLength >= buffer->mark_end) {
+      mark2 = buffer->data + buffer->mark_end-1;
+    } else {
+      mark2 = buffer->data + buffer->gapLength + buffer->mark_end-1;
+    }
+  }
+
+  /* copy data (except the gap) */
+  while (mark1<=mark2) {
+    if (!inGap(buffer, mark1)) {
+      mark1 = buffer->data+buffer->leftLength+buffer->gapLength+1;
+    }
+    buffer->copybuffer++ = mark1++;
+  }
 }

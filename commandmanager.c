@@ -15,6 +15,12 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
   if (ntokens > 0) {
     /* quit command */
     if (tokens[0][0]=='q') {
+      if (buffer->copybuffer != 0) {
+        /* free copy buffer */
+        free(buffer->copybuffer);
+      }
+      free(buffer->data);
+
       return 1;
     }
 
