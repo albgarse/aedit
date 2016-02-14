@@ -256,12 +256,6 @@ void copy(struct textBuffer *buffer)
 
     /* copy data (except the gap) */
     i=0;
-    if (mark1>mark2) {
-      tmp = mark1;
-      mark1 = mark2;
-      mark2 = tmp;
-    }
-
     while (mark1<=mark2) {
       if (!inGap(buffer, mark1)) {
         mark1 = buffer->data+buffer->leftLength+buffer->gapLength+1;
@@ -291,6 +285,15 @@ void delselected(struct textBuffer *buffer)
   unsigned char *tmp;
   int mark1, mark2;
   int i, j, k;
+
+  //TODO: remove order control
+  if (buffer->mark_init < buffer->mark_end) {
+    mark1 = buffer->mark_init;
+    mark2 = buffer->mark_end;
+  } else {
+    mark2 = buffer->mark_init;
+    mark1 = buffer->mark_end;
+  }
 
   /* allocate memory for the new buffer */
   tmp = (unsigned char *)malloc(buffer->size);

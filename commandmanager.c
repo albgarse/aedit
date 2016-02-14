@@ -22,7 +22,7 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
     }
 
     /* save command */
-    if (tokens[0][0]=='s') {
+    if (tokens[0][0]=='w') {
       result = save(b, b->bufferName);
       if (result == _KO) {
         strncpy(b->lastError, "Error Saving File", _STR_SIZE);
@@ -30,7 +30,7 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
     }
 
     /* mark to select text */
-    if (tokens[0][0]=='m') {
+    if (tokens[0][0]=='s') {
       if (b->mark_init == b->mark_end) {
         /* first mark */
         b->mark_init = b->leftLength + 1;
@@ -46,7 +46,7 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
     }
 
     /* deselected text */
-    if (tokens[0][0]=='M') {
+    if (tokens[0][0]=='S') {
       b->mark_init = b->mark_end = 0;
     }
 
@@ -56,7 +56,7 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
     // }
 
     /* past text */
-    if (tokens[0][0]=='p') {
+    if (tokens[0][0]=='c') {
       copy(b);
       paste(b);
     }
@@ -67,7 +67,7 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
     }
 
     /* move selected text */
-    if (tokens[0][0]=='v') {
+    if (tokens[0][0]=='m') {
       copy(b);
       paste(b);
       delselected(b);
