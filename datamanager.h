@@ -76,4 +76,6 @@ void copy(struct textBuffer *buffer);
 
 void paste(struct textBuffer *buffer);
 
-void delete(struct textBuffer *buffer);
+void delselected(struct textBuffer *buffer);
+
+void makePointersFromSelectedText(struct textBuffer *buffer, unsigned char **, unsigned char **);

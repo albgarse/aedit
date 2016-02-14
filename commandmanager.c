@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "datatypes.h"
 #include "commandmanager.h"
+#include "datamanager.h"
 #include "iomanager.h"
 
 
@@ -16,12 +17,7 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
   if (ntokens > 0) {
     /* quit command */
     if (tokens[0][0]=='q') {
-      if (b->copybufferLength != 0) {
-        /* free copy buffer */
-        free(b->copybuffer);
-      }
-      free(b->data);
-
+      freeBuffer(b);
       return 1;
     }
 
@@ -37,10 +33,15 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
     if (tokens[0][0]=='m') {
       if (b->mark_init == b->mark_end) {
         /* first mark */
-        b->mark_init = b->leftLength+1;
+        b->mark_init = b->leftLength + 1;
       } else {
         /* there is a mark yet. Update */
-        b->mark_end = b->leftLength+1;
+        if (b->mark_init < b->leftLength) {
+          b->mark_end = b->leftLength + 1;
+        } else {
+          b->mark_end = b->mark_init;
+          b->mark_init = b->leftLength + 1;
+        }
       }
     }
 
@@ -50,16 +51,27 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
     }
 
     /* copy text */
-    if (tokens[0][0]=='c') {
-      copy(b);
-    }
+    // if (tokens[0][0]=='c') {
+    //   copy(b);
+    // }
 
     /* past text */
     if (tokens[0][0]=='p') {
+      copy(b);
       paste(b);
     }
 
-    
+    /* delete selected text */
+    if (tokens[0][0]=='d') {
+      delselected(b);
+    }
+
+    /* move selected text */
+    if (tokens[0][0]=='v') {
+      copy(b);
+      paste(b);
+      delselected(b);
+    }
   }
   return 0;
 }
