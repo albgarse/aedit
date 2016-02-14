@@ -71,16 +71,11 @@ void display(struct textBuffer *buffer)
       }
 
       makePointersFromSelectedText(buffer, &mark1, &mark2);
-
-      //TODO: remove order control
-      if (buffer->mark_init < buffer->mark_end && buffer->mark_end !=0 && p >= mark1 && p <= mark2) {
-        attron(A_REVERSE);
-      } else if (buffer->mark_init > buffer->mark_end && buffer->mark_end !=0 && p >= mark2 && p <= mark1) {
+      if (buffer->mark_end !=0 && p >= mark1 && p < mark2) {
         attron(A_REVERSE);
       } else {
         attroff(A_REVERSE);
       }
-
 
       /* write em! */
       mvaddch(y,x,(unsigned char)*p);

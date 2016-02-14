@@ -38,83 +38,42 @@ void freeBuffer(struct textBuffer *b) {
 
 int newSize(struct textBuffer *buffer, int size)
 {
-
-  unsigned char *tmp;
-
   moveGap(buffer,buffer->length);
-  tmp=(unsigned char *)malloc(size);
-
-  if (tmp == NULL) {
-    return _KO;
+  if (buffer->size > 0) {
+    /* not a new buffer, so an old one is growing. */
+    /* the old one must be copied to the new one   */
+    realloc(buffer->data, size);
   } else {
-    if (buffer->size > 0) {
-      /* not a new buffer, so an old one is growing. */
-      /* the old one must be copied to the new one   */
-      memcpy(tmp,buffer->data,buffer->size);
-      free(buffer->data);
-    }
-
-    buffer->data=tmp;
-    buffer->gapLength+=(size-buffer->length);
-    buffer->size=size;
-
-    return _OK;
+    buffer->data = (unsigned char *)malloc(size);
   }
-}
 
+  buffer->gapLength+=(size-buffer->length);
+  buffer->size=size;
+
+  return _OK;
+}
 
 void moveGap(struct textBuffer *buffer, int position)
 {
-  /*
-  int amount,i;
-  int j;
-
-  if (position != buffer->leftLength) {
-  if (position < buffer->leftLength) {
-  amount = buffer->leftLength - position;
-  for (i=0 ; i<amount ; i++)
-  buffer->data[buffer->leftLength+buffer->gapLength-i-1] = buffer->data[buffer->leftLength-i-1];
-} else {
-amount = position - buffer->leftLength;
-for (i=0 ; i<amount ; i++)
-buffer->data[buffer->leftLength+i] = buffer->data[buffer->leftLength+buffer->gapLength+i];
-}
-buffer->leftLength = position;
-}
-
-for (j=1; j<=buffer->gapLength; j++) {
-*(buffer->data+buffer->leftLength+j)='*';
-}
-*/
-
 long amount;
 unsigned char *destination,*source;
-// int i;
 
-if (position != buffer->leftLength) {
-  if (position > buffer->leftLength) {
-    amount = position-buffer->leftLength;
-    destination=buffer->data+buffer->leftLength;
-    source=buffer->data+buffer->leftLength+buffer->gapLength;
-    buffer->leftLength += amount;
-    memmove(destination+1,source+1,amount);
-  } else {
-    amount = (buffer->leftLength - position);
-    destination=buffer->data+buffer->leftLength+buffer->gapLength;
-    source=buffer->data+buffer->leftLength;
-    buffer->leftLength -= amount;
-    memmove(destination-amount+1,source-amount+1,amount);
+  if (position != buffer->leftLength) {
+    if (position > buffer->leftLength) {
+      amount = position-buffer->leftLength;
+      destination=buffer->data+buffer->leftLength;
+      source=buffer->data+buffer->leftLength+buffer->gapLength;
+      buffer->leftLength += amount;
+      memmove(destination+1,source+1,amount);
+    } else {
+      amount = (buffer->leftLength - position);
+      destination=buffer->data+buffer->leftLength+buffer->gapLength;
+      source=buffer->data+buffer->leftLength;
+      buffer->leftLength -= amount;
+      memmove(destination-amount+1,source-amount+1,amount);
+    }
   }
 }
-
-
-//	for (i=1; i<=buffer->gapLength; i++) {
-//		*(buffer->data+buffer->leftLength+i)='*';
-//	}
-
-}
-
-
 
 void movePreviousLine(struct textBuffer *buffer)
 {
@@ -245,8 +204,6 @@ void cursorLeft(struct textBuffer *buffer)
 {
   if (buffer->leftLength > -1) {
     moveGap(buffer,buffer->leftLength-1);
-    //		if (*(buffer->data+buffer->leftLength+1) == '\n')
-    //			buffer->texty--;
   }
 }
 
@@ -254,13 +211,11 @@ void cursorRight(struct textBuffer *buffer)
 {
   if (buffer->leftLength < buffer->length-1) {
     moveGap(buffer,buffer->leftLength+1);
-    //		if (*(buffer->data+buffer->leftLength) == '\n')
-    //			buffer->texty++;
   }
 }
 
+
 /* get the pointers to the marks in the selected text */
-//TODO: remove order control
 void makePointersFromSelectedText(struct textBuffer *buffer, unsigned char **mark1, unsigned char **mark2)
 {
   if (buffer->mark_init != buffer->mark_end && buffer->mark_end !=0) {
@@ -336,15 +291,6 @@ void delselected(struct textBuffer *buffer)
   unsigned char *tmp;
   int mark1, mark2;
   int i, j, k;
-
-  //TODO: remove order control
-  if (buffer->mark_init < buffer->mark_end) {
-    mark1 = buffer->mark_init;
-    mark2 = buffer->mark_end;
-  } else {
-    mark2 = buffer->mark_init;
-    mark1 = buffer->mark_end;
-  }
 
   /* allocate memory for the new buffer */
   tmp = (unsigned char *)malloc(buffer->size);

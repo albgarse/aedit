@@ -17,7 +17,7 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
   if (ntokens > 0) {
     /* quit command */
     if (tokens[0][0]=='q') {
-      freeBuffer(b);
+      /* return 1 to force main to exit */
       return 1;
     }
 
@@ -37,10 +37,10 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
       } else {
         /* there is a mark yet. Update */
         if (b->mark_init < b->leftLength) {
-          b->mark_end = b->leftLength + 1;
+          b->mark_end = b->leftLength;
         } else {
           b->mark_end = b->mark_init;
-          b->mark_init = b->leftLength + 1;
+          b->mark_init = b->leftLength;
         }
       }
     }
