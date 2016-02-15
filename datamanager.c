@@ -42,7 +42,7 @@ int newSize(struct textBuffer *buffer, int size)
   if (buffer->size > 0) {
     /* not a new buffer, so an old one is growing. */
     /* the old one must be copied to the new one   */
-    realloc(buffer->data, size);
+    buffer->data = realloc(buffer->data, size);
   } else {
     buffer->data = (unsigned char *)malloc(size);
   }
