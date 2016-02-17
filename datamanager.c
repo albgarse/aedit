@@ -33,6 +33,7 @@ void freeBuffer(struct textBuffer *b) {
     free(b->copybuffer);
   }
   free(b->data);
+  free(b);
 }
 
 

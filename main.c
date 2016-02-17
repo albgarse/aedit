@@ -18,15 +18,22 @@ int main(int argc, char **argv) {
   b=(struct textBuffer *)malloc(sizeof(struct textBuffer));
 
   if (argc<=1) {
-    b->bufferName[0] = '\0';
+    /* Create initial buffer */
     if (createBuffer(b, _INIT_SIZE) != _OK) {
       printf("Error creating initial buffer.\n");
       return _KO;
     }
+    b->bufferName[0] = '\0';
     moveGap(b,-1);
   } else {
-    strncpy(b->bufferName,argv[1],_STR_SIZE);
-    load(b,argv[1]);
+    if (load(b,argv[1]) != _OK) {
+      /* Create initial buffer */
+      if (createBuffer(b, _INIT_SIZE) != _OK) {
+        printf("Error creating initial buffer.\n");
+        return _KO;
+      }
+    }
+    strncpy(b->bufferName, argv[1], _STR_SIZE);
     moveGap(b,-1);
   }
 
