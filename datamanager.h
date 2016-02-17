@@ -68,6 +68,10 @@ void insert(struct textBuffer *buffer, unsigned char ch);
 
 void delCurrentChar(struct textBuffer *buffer);
 
+void moveHome(struct textBuffer *buffer);
+
+void moveEnd(struct textBuffer *buffer);
+
 void cursorLeft(struct textBuffer *buffer);
 
 void cursorRight(struct textBuffer *buffer);

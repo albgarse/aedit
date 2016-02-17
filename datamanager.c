@@ -77,11 +77,11 @@ unsigned char *destination,*source;
 
 void movePreviousLine(struct textBuffer *buffer)
 {
-
-  if (buffer->scrtop > buffer->data)
-  while ((*(--buffer->scrtop-1) != '\n') && (buffer->scrtop > buffer->data)) {
-    if (!inGap(buffer,buffer->scrtop))
-    buffer->scrtop=buffer->data+buffer->leftLength;
+  if (buffer->scrtop > buffer->data) {
+    while ((*(--buffer->scrtop-1) != '\n') && (buffer->scrtop > buffer->data)) {
+      if (!inGap(buffer,buffer->scrtop))
+      buffer->scrtop=buffer->data+buffer->leftLength;
+    }
   }
 }
 
@@ -89,14 +89,38 @@ void movePreviousLine(struct textBuffer *buffer)
 
 void moveNextLine(struct textBuffer *buffer)
 {
-
-  if (buffer->scrtop <= buffer->data+buffer->length+buffer->gapLength)
-  while ((*(++buffer->scrtop-1) != '\n')) {
-    if (!inGap(buffer,buffer->scrtop))
-    buffer->scrtop=buffer->data+buffer->leftLength+buffer->gapLength;
+  if (buffer->scrtop <= buffer->data+buffer->length+buffer->gapLength) {
+    while ((*(++buffer->scrtop-1) != '\n')) {
+      if (!inGap(buffer,buffer->scrtop))
+      buffer->scrtop=buffer->data+buffer->leftLength+buffer->gapLength;
+    }
   }
 }
 
+
+void moveHome(struct textBuffer *buffer)
+{
+  unsigned char *p, *q;
+
+  p=q=buffer->data+buffer->leftLength;
+
+  /* Find previous carrige return */
+  while ((*(p) != '\n' && p >= buffer->data)) p--;
+  moveGap(buffer,buffer->leftLength+(p-q));
+}
+
+
+void moveEnd(struct textBuffer *buffer)
+{
+  unsigned char *p, *q;;
+
+  p=q=buffer->data+buffer->leftLength+buffer->gapLength+1;
+
+  /* Find next carrige return or the end of the buffer */
+  while (*p++ != '\n' && p < buffer->data+buffer->length+buffer->gapLength);
+  p--;
+  moveGap(buffer,buffer->leftLength+(p-q));
+}
 
 
 void moveCursorUp(struct textBuffer *buffer)

@@ -85,6 +85,14 @@ void mainloop(struct textBuffer *b) {
         }
         break;
 
+      case KEY_HOME:
+        moveHome(b);
+        break;
+
+      case KEY_END:
+        moveEnd(b);
+        break;
+
       case KEY_PPAGE:
         for (i=1 ; i<=_LINESINPAGE ; i++) {
           movePreviousLine(b);
