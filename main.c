@@ -26,8 +26,9 @@ int main(int argc, char **argv) {
     b->bufferName[0] = '\0';
     moveGap(b,-1);
   } else {
-    if (load(b,argv[1]) != _OK) {
-      /* Create initial buffer */
+    if (file_exist(argv[1])) {
+      load(b,argv[1]);
+    } else {
       if (createBuffer(b, _INIT_SIZE) != _OK) {
         printf("Error creating initial buffer.\n");
         return _KO;

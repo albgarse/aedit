@@ -49,7 +49,7 @@ int save(struct textBuffer *buffer,char *file)
 {
   int fd,writtenbytes;
 
-  if ((fd = open(file,O_WRONLY)) < 0) {
+  if ((fd = open(file,O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP)) < 0) {
     return _KO;
   }
   /* save left portion of gap buffer file */
@@ -64,4 +64,10 @@ int save(struct textBuffer *buffer,char *file)
   buffer->modified = 0;
   close(fd);
   return _OK;
+}
+
+int file_exist (char *filename)
+{
+  struct stat   buffer;
+  return (stat (filename, &buffer) == 0);
 }

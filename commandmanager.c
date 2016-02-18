@@ -9,6 +9,7 @@
 int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
 {
   char tokens[_MAX_TOKENS][_STR_SIZE];
+  char filename[_STR_SIZE];
   int ntokens;
   int result;
 
@@ -23,9 +24,17 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
 
     /* save command */
     if (tokens[0][0]=='w') {
-      result = save(b, b->bufferName);
-      if (result == _KO) {
-        strncpy(b->lastError, "Error Saving File", _STR_SIZE);
+      if (b->bufferName[0] == '\0') {
+        readCommand("Enter file name: ", filename);
+        strncpy(b->bufferName, filename, _STR_SIZE);
+      }
+      if (b->bufferName[0] != '\0') {
+        result = save(b, b->bufferName);
+        if (result == _KO) {
+          strncpy(b->lastError, "Error Saving File", _STR_SIZE);
+        }
+      } else {
+        strncpy(b->lastError, "The file was not saved", _STR_SIZE);
       }
     }
 
