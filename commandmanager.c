@@ -20,7 +20,21 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
     if (tokens[0][0]=='q') {
       /* return 1 to force main to exit */
       return 1;
-    }
+    } else
+
+    /* save as command */
+    if (tokens[0][0]=='w' && tokens[0][1]=='a') {
+      readCommand("Enter file name: ", filename);
+      strncpy(b->bufferName, filename, _STR_SIZE);
+      if (b->bufferName[0] != '\0') {
+        result = save(b, b->bufferName);
+        if (result == _KO) {
+          strncpy(b->lastError, "Error Saving File", _STR_SIZE);
+        }
+      } else {
+        strncpy(b->lastError, "The file was not saved", _STR_SIZE);
+      }
+    } else
 
     /* save command */
     if (tokens[0][0]=='w') {
@@ -36,7 +50,7 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
       } else {
         strncpy(b->lastError, "The file was not saved", _STR_SIZE);
       }
-    }
+    } else
 
     /* mark to select text */
     if (tokens[0][0]=='s') {
@@ -52,12 +66,12 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
           b->mark_init = b->leftLength;
         }
       }
-    }
+    } else
 
     /* deselected text */
     if (tokens[0][0]=='S') {
       b->mark_init = b->mark_end = 0;
-    }
+    } else
 
     /* copy text */
     // if (tokens[0][0]=='c') {
@@ -68,12 +82,12 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
     if (tokens[0][0]=='c') {
       copy(b);
       paste(b);
-    }
+    } else
 
     /* delete selected text */
     if (tokens[0][0]=='d') {
       delselected(b);
-    }
+    } else
 
     /* move selected text */
     if (tokens[0][0]=='m') {
