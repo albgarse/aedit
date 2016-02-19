@@ -17,6 +17,7 @@
 #define _INIT_SIZE 1024
 #define _STR_SIZE 255
 #define _MAX_TOKENS 4
+#define _MIN_GAP_SIZE 10
 #define TRUE 1
 #define FALSE 0
 

@@ -42,7 +42,6 @@ int newSize(struct textBuffer *buffer, int size)
   moveGap(buffer,buffer->length);
   if (buffer->size > 0) {
     /* not a new buffer, so an old one is growing. */
-    /* the old one must be copied to the new one   */
     buffer->data = realloc(buffer->data, size);
   } else {
     buffer->data = (unsigned char *)malloc(size);
@@ -209,6 +208,10 @@ int inGap(struct textBuffer *buffer, unsigned char *p)
 
 void insert(struct textBuffer *buffer, unsigned char ch)
 {
+  /* grow gap when needed */
+  if (buffer->gapLength < _MIN_GAP_SIZE) {
+    newSize(buffer, buffer->size + _INIT_SIZE);
+  }
   buffer->leftLength++;
   buffer->gapLength--;
   buffer->length++;
