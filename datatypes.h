@@ -20,6 +20,7 @@
 #define _MIN_GAP_SIZE 10
 #define TRUE 1
 #define FALSE 0
+#define NOTFOUND -1
 
 /* KEYS */
 #define KEY_SUP 337
@@ -53,4 +54,6 @@ struct textBuffer {
 	char lastError[_STR_SIZE]; /* last error */
 	unsigned char *copybuffer; /* buffer for copy&paste operations */
 	int copybufferLength; /* length of the data in the copybuffer */
+	int lastFindPosition; /* position where last search found the text */
+	char lastFindText[_STR_SIZE];	/* last text that was found */
 };

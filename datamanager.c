@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <curses.h>
 #include "datatypes.h"
 #include "datamanager.h"
 
@@ -18,6 +19,8 @@ int createBuffer(struct textBuffer *buffer, int size) {
   buffer->texty=0;
   buffer->modified = 0;
   buffer->copybufferLength = 0;
+  buffer->lastFindText[0] = '\0';
+  buffer->lastFindPosition = NOTFOUND;
 
   ok = newSize(buffer,size);	/* Allocate the needed space*/
   buffer->scrtop=buffer->data;
@@ -366,4 +369,68 @@ void delselected(struct textBuffer *buffer)
   //TODO: assign b->data to tmp instead of copy?
   memcpy(buffer->data, tmp, buffer->size);
   free(tmp);
+}
+
+int search(struct textBuffer *buffer, char *needle, int start)
+{
+  int totallen, needlelen, i, j;
+
+  i = start;
+  needlelen = strlen(needle);
+  totallen = buffer->gapLength + buffer->length - needlelen;
+  while (i < totallen) {
+    for (j=0; j<strlen(needle); j++) {
+      if (*(buffer->data + i + j) != *(needle + j))
+        break;
+    }
+
+    if (j == needlelen) {
+      return i;
+    }
+    i++;
+  }
+
+  return NOTFOUND;
+
+  //if (!inGap(buffer,p)) {
+  //  p = buffer->data+buffer->leftLength+buffer->gapLength+1;
+  //}
+
+}
+
+void updateTopPosition(struct textBuffer *buffer)
+{
+  unsigned char *p, *q;
+  int y, x, inscreen;
+
+  y = 0;
+  x = 0;
+  inscreen = FALSE;
+  p = buffer->scrtop;
+  /* find if the cursor is inside the display screen */
+  while (y < LINES) {
+    /* gap (cursor) found inside the screen */
+    if (!inGap(buffer,p)) {
+      inscreen = TRUE;
+      break;
+    }
+
+    if (*p=='\n' || x%COLS) {
+      y++;
+      x=0;
+      p++;
+    } else {
+      x++;
+      p++;
+    }
+  }
+
+  if (inscreen != TRUE) {
+    p=q=buffer->data+buffer->leftLength;
+
+    /* Find previous carrige return */
+    while ((*(p) != '\n' && p >= buffer->data)) p--;
+    buffer->scrtop = buffer->data + buffer->leftLength+(p-q);
+    //moveGap(buffer,buffer->leftLength+(p-q));
+  }
 }

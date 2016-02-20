@@ -9,9 +9,9 @@
 int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
 {
   char tokens[_MAX_TOKENS][_STR_SIZE];
-  char filename[_STR_SIZE];
+  char filename[_STR_SIZE], text[_STR_SIZE];
   int ntokens;
-  int result;
+  int result, pos;
 
   ntokens = tokenize(cmd, tokens);
 
@@ -94,7 +94,41 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
       copy(b);
       paste(b);
       delselected(b);
+    } else
+
+    /* find next */
+    if (tokens[0][0]=='f' && tokens[0][1]=='n') {
+        if (b->lastFindPosition == NOTFOUND) {
+            readCommand("Find text: ", text);
+        } else {
+          strncpy(text, b->lastFindText, _STR_SIZE);
+        }
+        pos = search(b, text, b->lastFindPosition+1);
+        if ( pos != NOTFOUND) {
+          moveGap(b, pos-1);
+          updateTopPosition(b);
+          b->lastFindPosition = pos;
+        } else {
+          strncpy(b->lastError, "Not found", _STR_SIZE);
+        }
+
+    } else
+
+    /* find */
+    if (tokens[0][0]=='f') {
+      readCommand("Find text: ", text);
+      pos = search(b, text, 0);
+      if ( pos != NOTFOUND) {
+        moveGap(b, pos-1);
+        updateTopPosition(b);
+        b->lastFindPosition = pos;
+        strncpy(b->lastFindText, text, _STR_SIZE);
+      } else {
+        strncpy(b->lastError, "Not found", _STR_SIZE);
+        b->lastFindPosition = NOTFOUND;
+      }
     }
+
   }
   return 0;
 }

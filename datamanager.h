@@ -83,3 +83,8 @@ void paste(struct textBuffer *buffer);
 void delselected(struct textBuffer *buffer);
 
 void makePointersFromSelectedText(struct textBuffer *buffer, unsigned char **, unsigned char **);
+
+int search(struct textBuffer *buffer, char *needle, int start);
+
+/* update the top position of textbuffer for screen display after a search */
+void updateTopPosition(struct textBuffer *buffer);
