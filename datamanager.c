@@ -40,61 +40,36 @@ void freeBuffer(struct textBuffer *b) {
 int newSize(struct textBuffer *buffer, int size)
 {
   unsigned char *tmp;
-  int i;
+  int i, top, newgaplenght;
 
   if (buffer->size > 0) {
+    top = buffer->scrtop - buffer->data;
+    newgaplenght = size-buffer->length;
     /* allocate memory for the new buffer */
     tmp = (unsigned char *)malloc(size);
 
     /* copy data */
-    i=0;
-    while (i < buffer->size) {
-      *(tmp + i) = *(buffer->data + i);
-      i++;
-    }
-
+    memcpy(tmp, buffer->data, buffer->size);
     free(buffer->data);
     buffer->data = (unsigned char *)malloc(size);
-    memcpy(buffer->data, tmp, buffer->size);
+    /* copy first part */
+    memcpy(buffer->data, tmp, buffer->leftLength+1);
+    /* copy second part after the gap */
+    memcpy(buffer->data + buffer->leftLength + newgaplenght , tmp + buffer->leftLength + buffer->gapLength, buffer->length - buffer->leftLength);
     free(tmp);
+    /* adjust pointer to top screen */
+    buffer->scrtop = buffer->data + top;
 
   } else {
     buffer->data = (unsigned char *)malloc(size);
   }
 
-  buffer->gapLength=(size-buffer->length);
+  buffer->gapLength = newgaplenght;
   buffer->size=size;
 
   return _OK;
 }
 
-// int newSize(struct textBuffer *buffer, int size)
-// {
-//   unsigned char *tmp;
-//   int i, oldsize;
-//
-//   tmp = buffer->data;
-//   oldsize = buffer->size;
-//   moveGap(buffer,buffer->length);
-//   if (buffer->size > 0) {
-//     /* not a new buffer, so an old one is growing. */
-//     buffer->data = realloc(buffer->data, size);
-//     /* copy data */
-//     i=0;
-//     while (i < oldsize) {
-//       *(buffer->data + i) = *(tmp + i);
-//       i++;
-//     }
-//
-//   } else {
-//     buffer->data = (unsigned char *)malloc(size);
-//   }
-//
-//   buffer->gapLength+=(size-buffer->length);
-//   buffer->size=size;
-//
-//   return _OK;
-// }
 
 void moveGap(struct textBuffer *buffer, int position)
 {
