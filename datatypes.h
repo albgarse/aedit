@@ -49,7 +49,7 @@ struct textBuffer {
 	char bufferName[_STR_SIZE];	/* name of the buffer 				*/
 	short int curx,cury;	/* actual cursor position on screen TODO: delete		*/
 	int mark_init, mark_end; /* pointers to marked text */
-	int texty;		/* actual cursor position on text 		*/
+	int texty;		/* actual cursor position on text TODO: delete		*/
 	int modified; /* the has been modified since last save */
 	char lastError[_STR_SIZE]; /* last error */
 	unsigned char *copybuffer; /* buffer for copy&paste operations */

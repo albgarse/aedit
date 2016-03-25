@@ -96,7 +96,7 @@ void display(struct textBuffer *buffer)
   for (i=0; i<COLS; i++)
   addch(' ');
 
-  sprintf(topLine," aedit v0.1b   File: %s %c  Row %d  Col %d [%s]",buffer->bufferName, buffer->modified?'*':' ', buffer->texty+1,buffer->curx+1, buffer->lastError);
+  sprintf(topLine," aedit v0.1b   File: %s %c  Row %d  Col %d [%s]",buffer->bufferName, buffer->modified?'*':' ', linesToCursorPosition(buffer), xtmp, buffer->lastError);
   //sprintf(topLine," mark1: %d Mark2: %d init: %d end: %d",(int)mark1, (int)mark2, (int)buffer->mark_init, (int)buffer->mark_end);
   //sprintf(topLine,"leftLength: %d  gapLength: %d Length: %d",buffer->leftLength,buffer->gapLength,buffer->length);
 

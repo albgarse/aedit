@@ -16,7 +16,7 @@ int createBuffer(struct textBuffer *buffer, int size) {
   buffer->gapLength=0;
   buffer->curx=0;
   buffer->cury=0;
-  buffer->texty=0;
+  //buffer->texty=0;
   buffer->modified = 0;
   buffer->copybufferLength = 0;
   buffer->lastFindText[0] = '\0';
@@ -177,8 +177,8 @@ void moveCursorUp(struct textBuffer *buffer)
 
   if (p != q) {
     moveGap(buffer,buffer->leftLength+(p-q));
-    if (p >= buffer->data-1)
-      buffer->texty--;
+    //if (p >= buffer->data-1)
+    //  buffer->texty--;
   }
 }
 
@@ -209,7 +209,7 @@ void moveCursorDown(struct textBuffer *buffer)
       p++;
     }
     moveGap(buffer,buffer->leftLength+(p-q));
-      buffer->texty++;
+    //buffer->texty++;
   }
 
 
@@ -428,11 +428,28 @@ void updateTopPosition(struct textBuffer *buffer)
   }
 
   if (inscreen != TRUE) {
-    p=q=buffer->data+buffer->leftLength;
+    p = q = buffer->data + buffer->leftLength;
 
     /* Find previous carrige return */
     while ((*(p) != '\n' && p >= buffer->data)) p--;
     buffer->scrtop = buffer->data + buffer->leftLength+(p-q);
     //moveGap(buffer,buffer->leftLength+(p-q));
   }
+}
+
+int linesToCursorPosition(struct textBuffer *buffer)
+{
+  unsigned char *p, *q;
+  p = buffer->data;
+  q = buffer->data + buffer->leftLength + 1;
+  int lines = 1;
+
+  while (p < q) {
+    if (*p == '\n') {
+      lines++;
+    }
+    p++;
+  }
+
+  return lines;
 }
