@@ -184,3 +184,77 @@ void readCommand(char * prompt, char *cmd)
   noecho();
   attroff(A_REVERSE);
 }
+
+void showHelpWindow()
+{
+  static const char *lines[] = {
+    "Usage:",
+    "",
+    "While in edit mode, press SCAPE key to enter in command mode.",
+    "",
+    "Commands:",
+    "",
+    "q - Quit editor",
+    "",
+    "w - Save",
+    "",
+    "wa - Save as",
+    "",
+    "s - Set text selection mark (two marks are needed to select a text portion)",
+    "",
+    "S - Unselect text (clear selection marks)",
+    "",
+    "c - Copy selected text to the cursor position",
+    "",
+    "m - Move selected text to the cursor position",
+    "",
+    "d - Delete selected text",
+    "",
+    "f - Find text",
+    "",
+    "fn - Find next text occurence",
+    "",
+    "h - Help"
+  };
+  const int nlines = (int)(sizeof(lines) / sizeof(lines[0]));
+
+  int maxlen = 0;
+  for (int i = 0; i < nlines; i++) {
+    int len = (int)strlen(lines[i]);
+    if (len > maxlen) maxlen = len;
+  }
+
+  int height = nlines + 4;
+  int width  = maxlen + 4;
+
+  if (height > LINES - 2) height = LINES - 2;
+  if (width  > COLS  - 2) width  = COLS  - 2;
+  if (height < 6) height = 6;
+  if (width  < 20) width = 20;
+
+  int starty = (LINES - height) / 2;
+  int startx = (COLS  - width)  / 2;
+  if (starty < 0) starty = 0;
+  if (startx < 0) startx = 0;
+
+  WINDOW *w = newwin(height, width, starty, startx);
+  keypad(w, TRUE);
+  box(w, 0, 0);
+
+  int y = 1;
+  for (int i = 0; i < nlines && y < height - 2; i++, y++) {
+    mvwaddnstr(w, y, 2, lines[i], width - 4);
+  }
+
+  mvwaddnstr(w, height - 2, 2, "Press ESC to close", width - 4);
+  wrefresh(w);
+
+  int ch;
+  while ((ch = wgetch(w)) != KEY_ESC && ch != 27) {
+    /* wait */
+  }
+
+  delwin(w);
+  touchwin(stdscr);
+  refresh();
+}

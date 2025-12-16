@@ -54,6 +54,8 @@ int newSize(struct textBuffer *buffer, int newsize);
 ****/
 //void insertText(struct textBuffer *buffer, int position, char *newText, int textLength);
 
+int linesToCursorPosition(struct textBuffer *buffer);
+
 void movePreviousLine(struct textBuffer *buffer);
 
 void moveNextLine(struct textBuffer *buffer);

@@ -4,6 +4,7 @@
 #include "commandmanager.h"
 #include "datamanager.h"
 #include "iomanager.h"
+#include "screenmanager.h"
 
 
 int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
@@ -52,7 +53,13 @@ int processCommand(char cmd[_STR_SIZE], struct textBuffer *b)
       }
     } else
 
-    /* mark to select text */
+    
+/* help */
+if (tokens[0][0]=='h') {
+  showHelpWindow();
+} else
+
+/* mark to select text */
     if (tokens[0][0]=='s') {
       if (b->mark_init == b->mark_end) {
         /* first mark */
