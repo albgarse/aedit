@@ -57,6 +57,7 @@ int newSize(struct textBuffer *buffer, int newsize);
 void movePreviousLine(struct textBuffer *buffer);
 
 void moveNextLine(struct textBuffer *buffer);
+void normalizeScrTopToLineStart(struct textBuffer *buffer);
 
 void moveCursorUp(struct textBuffer *buffer);
 

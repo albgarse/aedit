@@ -1,0 +1,26 @@
+--- a/main.c
++++ b/main.c
+@@ -88,8 +88,10 @@
+
+       case KEY_NPAGE:
+         for (i=1 ; i<=_LINESINPAGE ; i++) {
++          int oldLeft = b->leftLength;
++          moveCursorDown(b);
++          if (b->leftLength == oldLeft) break; /* EOF: cursor didn't move */
+           moveNextLine(b);
+-          moveCursorDown(b);
+         }
+         normalizeScrTopToLineStart(b);
+         break;
+@@ -104,8 +106,10 @@
+
+       case KEY_PPAGE:
+         for (i=1 ; i<=_LINESINPAGE ; i++) {
++          int oldLeft = b->leftLength;
++          moveCursorUp(b);
++          if (b->leftLength == oldLeft) break; /* BOF: cursor didn't move */
+           movePreviousLine(b);
+-          moveCursorUp(b);
+         }
+         normalizeScrTopToLineStart(b);
+         break;

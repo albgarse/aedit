@@ -88,9 +88,12 @@ void mainloop(struct textBuffer *b) {
 
       case KEY_NPAGE:
         for (i=1 ; i<=_LINESINPAGE ; i++) {
-          moveNextLine(b);
+          int oldLeft = b->leftLength;
           moveCursorDown(b);
+          if (b->leftLength == oldLeft) break; /* EOF: cursor didn't move */
+          moveNextLine(b);
         }
+        normalizeScrTopToLineStart(b);
         break;
 
       case KEY_HOME:
@@ -103,9 +106,12 @@ void mainloop(struct textBuffer *b) {
 
       case KEY_PPAGE:
         for (i=1 ; i<=_LINESINPAGE ; i++) {
-          movePreviousLine(b);
+          int oldLeft = b->leftLength;
           moveCursorUp(b);
+          if (b->leftLength == oldLeft) break; /* BOF: cursor didn't move */
+          movePreviousLine(b);
         }
+        normalizeScrTopToLineStart(b);
         break;
 
       case 10:

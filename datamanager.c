@@ -118,6 +118,38 @@ void moveNextLine(struct textBuffer *buffer)
   }
 }
 
+void normalizeScrTopToLineStart(struct textBuffer *buffer)
+{
+  unsigned char *start = buffer->data;
+  unsigned char *p = buffer->scrtop;
+
+  if (p <= start) {
+    buffer->scrtop = start;
+    return;
+  }
+
+  /* Move back to the beginning of the current line.
+   * We define "line start" as: start of buffer, or the char right after a '\n'.
+   * If we fall into the gap, jump to the left edge of the gap.
+   */
+  while (p > start) {
+    if (!inGap(buffer, p)) {
+      p = buffer->data + buffer->leftLength;
+      if (p <= start) break;
+    }
+    if (*(p - 1) == '\n') break;
+    p--;
+  }
+
+  if (p < start) p = start;
+  if (!inGap(buffer, p)) {
+    /* Ensure scrtop never points into the gap */
+    p = buffer->data + buffer->leftLength + buffer->gapLength;
+  }
+  buffer->scrtop = p;
+}
+
+
 
 void moveHome(struct textBuffer *buffer)
 {
