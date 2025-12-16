@@ -29,5 +29,5 @@ f	- Find text
 
 fn	- Find next text occurence
 
-
+h - Help
  
