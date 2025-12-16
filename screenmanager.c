@@ -16,6 +16,16 @@ void display(struct textBuffer *buffer)
   int charWrote,newline;
   char topLine[COLS+50];
 
+  /* Safety default: if the gap/cursor is not inside the visible area we are
+     painting, xtmp/ytmp would otherwise remain uninitialized and the cursor
+     can jump to y=0 (the status bar), effectively breaking navigation/editing. */
+  xtmp = buffer->curx;
+  ytmp = buffer->cury;
+  if (ytmp < 1) ytmp = 1;
+  if (xtmp < 0) xtmp = 0;
+  if (xtmp >= COLS) xtmp = COLS - 1;
+  if (ytmp >= LINES) ytmp = LINES - 1;
+
   /* x and y are the position in screen to write the next char */
   x=0;
   y=1;
@@ -43,7 +53,7 @@ void display(struct textBuffer *buffer)
 
       case '\n':
       /* clear rest of the line */
-      for (i=x ; i<=COLS ; i++) mvaddch(y,x++,' ');
+      for (i=x ; i<COLS ; i++) mvaddch(y,x++,' ');
       //	xtmp=buffer->curx+1;
       //	ytmp=buffer->cury;
       newline = TRUE;
@@ -63,8 +73,8 @@ void display(struct textBuffer *buffer)
       if (p >= buffer->data+buffer->gapLength+buffer->length) {
 
         /* clear the rest of the windows */
-        for (j=y ; j<=LINES ; j++) {
-          for (i=x ; i<=COLS ; i++) mvaddch(y,x++,' ');
+        for (j=y ; j<LINES ; j++) {
+          for (i=x ; i<COLS ; i++) mvaddch(y,x++,' ');
           y++;
           x=0;
         }
@@ -106,6 +116,13 @@ void display(struct textBuffer *buffer)
   /* set cursor position */
   buffer->curx=xtmp;
   buffer->cury=ytmp;
+
+  /* Final clamp: never allow cursor on the status bar (row 0) */
+  if (buffer->cury < 1) buffer->cury = 1;
+  if (buffer->curx < 0) buffer->curx = 0;
+  if (buffer->curx >= COLS) buffer->curx = COLS - 1;
+  if (buffer->cury >= LINES) buffer->cury = LINES - 1;
+
   move(buffer->cury,buffer->curx);
   attroff(A_REVERSE);
 }

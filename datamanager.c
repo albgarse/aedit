@@ -410,19 +410,30 @@ void updateTopPosition(struct textBuffer *buffer)
   inscreen = FALSE;
   p = buffer->scrtop;
   /* find if the cursor is inside the display screen */
-  while (y < LINES) {
+  /* Note: screen row 0 is the status bar, so the text area is LINES-1 rows. */
+  int max_text_rows = LINES - 1;
+  if (max_text_rows < 1) max_text_rows = 1;
+
+  while (y < max_text_rows) {
     /* gap (cursor) found inside the screen */
     if (!inGap(buffer,p)) {
       inscreen = TRUE;
       break;
     }
 
-    if (*p=='\n' || x%COLS) {
+    /* Advance one character, counting screen wraps correctly.
+       (The previous code used x%COLS, which is non-zero most of the time and
+       caused y to grow incorrectly, breaking scroll/cursor visibility logic.) */
+    if (*p == '\n') {
       y++;
-      x=0;
+      x = 0;
       p++;
     } else {
       x++;
+      if (x >= COLS) {
+        y++;
+        x = 0;
+      }
       p++;
     }
   }
